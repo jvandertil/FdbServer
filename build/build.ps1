@@ -43,6 +43,6 @@ exec { & dotnet restore --force $sourceDir\FdbServer.sln }
 
 exec { & dotnet build --no-restore -c $CI_CONFIG --version-suffix=$CI_VERSION $sourceDir\FdbServer.sln }
 
-#exec { & dotnet test --no-build -c $CI_CONFIG --verbosity=normal $sourceDir\test\FdbServer.Tests\FdbServer.Tests.csproj }
+exec { & dotnet test --no-build -c $CI_CONFIG --verbosity=normal $sourceDir\test\FdbServer.Tests\FdbServer.Tests.csproj }
 
 exec { & dotnet pack -o $outputDir --no-build --include-symbols -c $CI_CONFIG --version-suffix=$CI_VERSION $sourceDir\src\FdbServer\FdbServer.csproj }
