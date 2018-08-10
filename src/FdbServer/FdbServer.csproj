@@ -19,7 +19,7 @@
   <!-- NuGet properties-->
   <PropertyGroup>
     <PackageId>FdbServer</PackageId>
-    <VersionPrefix>0.1.0</VersionPrefix>
+    <VersionPrefix>0.2.0</VersionPrefix>
     <Authors>Jos van der Til</Authors>
     <Company>van der Til.NET</Company>
   </PropertyGroup>
