@@ -1,5 +1,5 @@
 ## Custom .gitignore entries
-
+/output/
 
 ## VisualStudio.gitignore entries
 ## Ignore Visual Studio temporary files, build results, and
