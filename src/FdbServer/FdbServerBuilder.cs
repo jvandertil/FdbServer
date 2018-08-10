@@ -2,16 +2,17 @@
 {
     using System;
     using System.IO;
-    using System.IO.Compression;
-    using System.Net;
-    using System.Net.Http;
     using System.Runtime.InteropServices;
-    using System.Security.Cryptography;
     using System.Threading.Tasks;
+    using Download;
+    using Download.Caching;
+    using Download.Integrity;
 
     public class FdbServerBuilder
     {
-        private FdbServerUrl _url;
+        private readonly IFdbServerInstaller _installer = new FdbServerInstaller();
+
+        private FdbServerVersion _version;
         private string _homeDirectory;
         private string _logDirectory;
         private string _dataDirectory;
@@ -29,17 +30,20 @@
             var tempFolder = Path.GetTempPath();
             var randomSuffix = Guid.NewGuid().ToString().Substring(0, 6);
 
-            _homeDirectory = Path.Combine(tempFolder, "fdbserver-" + randomSuffix);
+            WithHomeDirectory(Path.Combine(tempFolder, "fdbserver-" + randomSuffix));
+        }
+
+        private void WithHomeDirectory(string homeDirectory)
+        {
+            _homeDirectory = homeDirectory;
             _logDirectory = Path.Combine(_homeDirectory, "logs");
             _dataDirectory = Path.Combine(_homeDirectory, "data");
             _clusterFile = Path.Combine(_homeDirectory, "fdb.cluster");
-
-            _url = FdbServerDownloadRepository.GetUrl(FdbServerVersion.v5_2_5);
         }
 
         public FdbServerBuilder WithVersion(FdbServerVersion version)
         {
-            _url = FdbServerDownloadRepository.GetUrl(version);
+            _version = version;
 
             return this;
         }
@@ -47,52 +51,25 @@
         public async Task<IFdbServer> BuildAsync()
         {
             // Download archive to zip
-            var destinationFileName = Path.GetTempFileName();
-
             try
             {
-#if NET46
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-#endif
-
-                using (var webclient = new HttpClient())
-                {
-                    var serverDownloadTask = webclient.GetStreamAsync(_url.Uri);
-
-                    using (var destination = File.OpenWrite(destinationFileName))
-                    {
-                        var stream = await serverDownloadTask;
-
-                        await stream.CopyToAsync(destination);
-
-                        await destination.FlushAsync();
-                    }
-                }
-
-                // Check hash.
-                using (var hashAlgorithm = SHA512.Create())
-                {
-                    using (var destination = File.OpenRead(destinationFileName))
-                    {
-                        var hash = hashAlgorithm.ComputeHash(destination);
-
-                        var hashString = BitConverter.ToString(hash).Replace("-", "");
-
-                        if (!hashString.Equals(_url.Sha512Hash))
-                        {
-                            // TODO: What is useful here?
-                            throw new Exception();
-                        }
-                    }
-                }
-
-                // Extract archive to home
-                Directory.CreateDirectory(_homeDirectory);
-                ZipFile.ExtractToDirectory(destinationFileName, _homeDirectory);
+                await _installer.InstallToDestination(_version, _homeDirectory);
             }
-            finally
+            catch (FileIntegrityException)
             {
-                File.Delete(destinationFileName);
+                // Maybe corrupt cache?
+                CachingHelper.PurgeCache();
+
+                try
+                {
+                    await _installer.InstallToDestination(_version, _homeDirectory);
+                }
+                catch
+                {
+                    Directory.Delete(_homeDirectory, true);
+
+                    throw;
+                }
             }
 
             // Initialize folders, log & data

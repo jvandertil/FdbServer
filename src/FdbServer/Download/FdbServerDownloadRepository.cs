@@ -1,4 +1,4 @@
-﻿namespace FdbServer
+﻿namespace FdbServer.Download
 {
     using System;
     using System.Collections.Generic;
