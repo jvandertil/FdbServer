@@ -47,7 +47,7 @@
 
             var cliProc = Process.Start(fdbCliInfo);
 
-            while (!cliProc.HasExited)
+            while (cliProc != null && !cliProc.HasExited)
             {
                 Thread.Sleep(50);
             }
@@ -57,7 +57,7 @@
         {
             if (Started)
             {
-                throw new InvalidOperationException("Already started.");
+                throw new InvalidOperationException("Server already started.");
             }
 
             CreateClusterFile();
@@ -77,6 +77,11 @@
 
         public void Stop()
         {
+            if (!Started)
+            {
+                throw new InvalidOperationException("Server not started.");
+            }
+
             if (!_fdbserverProcess.HasExited)
             {
                 _fdbserverProcess.CloseMainWindow();
@@ -88,6 +93,12 @@
 
                     // Allow a small amount of time for the process to terminate, releasing all files.
                     Thread.Sleep(100);
+
+                    while (!_fdbserverProcess.HasExited)
+                    {
+                        // Wait for process to die.
+                        Thread.Sleep(50);
+                    }
                 }
             }
         }
