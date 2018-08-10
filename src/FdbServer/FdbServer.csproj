@@ -26,6 +26,7 @@
     <Copyright>Copyright (C) 2018 van der Til.NET</Copyright>
     <Description>Library to support integration tests against FoundationDB.</Description>
     <RepositoryUrl>https://github.com/jvandertil/FdbServer</RepositoryUrl>
+    <PackageLicenseUrl>https://github.com/jvandertil/FdbServer/blob/master/LICENSE.txt</PackageLicenseUrl>
     <PackageTags>foundationdb;test;testing</PackageTags>
   </PropertyGroup>
 
