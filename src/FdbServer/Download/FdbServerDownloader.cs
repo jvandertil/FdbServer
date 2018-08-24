@@ -11,11 +11,6 @@
         {
             var url = FdbServerUrlRepository.GetUrl(version);
 
-#if NET46
-            // Enable TLS 1.2 for GitHub.
-            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
-#endif
-
             // Download file to temporary file.
             using (var webclient = new HttpClient())
             {
