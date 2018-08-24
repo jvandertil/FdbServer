@@ -91,14 +91,14 @@
                 {
                     _fdbserverProcess.Kill();
 
-                    // Allow a small amount of time for the process to terminate, releasing all files.
-                    Thread.Sleep(100);
-
                     while (!_fdbserverProcess.HasExited)
                     {
                         // Wait for process to die.
                         Thread.Sleep(50);
                     }
+
+                    // Allow a small amount of time for the process to terminate, releasing all files.
+                    Thread.Sleep(100);
                 }
             }
         }
@@ -122,17 +122,18 @@
 
         private static int FreeTcpPort()
         {
-            TcpListener l = new TcpListener(IPAddress.Loopback, 0);
+            var listener = new TcpListener(IPAddress.Loopback, 0);
+
             try
             {
-                l.Start();
-                int port = ((IPEndPoint)l.LocalEndpoint).Port;
+                listener.Start();
+                int port = ((IPEndPoint)listener.LocalEndpoint).Port;
 
                 return port;
             }
             finally
             {
-                l.Stop();
+                listener.Stop();
             }
         }
     }
