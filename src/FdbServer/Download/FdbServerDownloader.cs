@@ -9,7 +9,7 @@
     {
         public async Task DownloadVersion(FdbServerVersion version, string destinationFile)
         {
-            var url = FdbServerDownloadRepository.GetUrl(version);
+            var url = FdbServerUrlRepository.GetUrl(version);
 
 #if NET46
             // Enable TLS 1.2 for GitHub.

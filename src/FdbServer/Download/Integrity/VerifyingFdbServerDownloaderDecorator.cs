@@ -18,7 +18,7 @@
         {
             await _decorated.DownloadVersion(version, destinationFile);
 
-            var checksum = FdbServerDownloadRepository.GetUrl(version).Sha512Hash;
+            var checksum = FdbServerUrlRepository.GetUrl(version).Sha512Hash;
 
             using (var hashAlgorithm = SHA512.Create())
             {

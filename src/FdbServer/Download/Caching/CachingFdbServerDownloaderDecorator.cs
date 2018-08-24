@@ -37,7 +37,7 @@
 
         private string GetCacheFileName(FdbServerVersion version)
         {
-            var url = FdbServerDownloadRepository.GetUrl(version);
+            var url = FdbServerUrlRepository.GetUrl(version);
 
             string fileName = Path.Combine(CachingHelper.GetCacheFolder(), Path.GetFileName(url.Uri.LocalPath));
 

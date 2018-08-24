@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
 
-    internal static class FdbServerDownloadRepository
+    internal static class FdbServerUrlRepository
     {
         private static readonly Dictionary<FdbServerVersion, FdbServerUrl> _repository = new Dictionary<FdbServerVersion, FdbServerUrl>
         {
