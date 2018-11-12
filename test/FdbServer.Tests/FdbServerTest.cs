@@ -1,11 +1,16 @@
 ﻿namespace FdbServer.Tests
 {
-    using System.IO;
+    using System;
     using System.Threading.Tasks;
     using Xunit;
 
     public class FdbServerTest
     {
+        public FdbServerTest()
+        {
+            AppContext.SetSwitch("Switch.System.Net.DontEnableSystemDefaultTlsVersions", false);
+        }
+
         [Fact]
         public async Task TestFullCycle()
         {
