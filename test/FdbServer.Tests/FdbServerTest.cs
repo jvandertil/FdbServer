@@ -11,11 +11,12 @@
             AppContext.SetSwitch("Switch.System.Net.DontEnableSystemDefaultTlsVersions", false);
         }
 
-        [Fact]
-        public async Task TestFullCycle()
+        [Theory]
+        [InlineData(FdbServerVersion.v5_2_5)]
+        [InlineData(FdbServerVersion.v6_0_15)]
+        public async Task TestFullCycle(FdbServerVersion version)
         {
-            var builder = new FdbServerBuilder();
-            var server = await builder.BuildAsync();
+            var server = await BuildServer(version);
 
             try
             {
@@ -31,11 +32,12 @@
             }
         }
 
-        [Fact]
-        public async Task ClusterFile_ReturnsPath()
+        [Theory]
+        [InlineData(FdbServerVersion.v5_2_5)]
+        [InlineData(FdbServerVersion.v6_0_15)]
+        public async Task ClusterFile_ReturnsPath(FdbServerVersion version)
         {
-            var builder = new FdbServerBuilder();
-            var server = await builder.BuildAsync();
+            var server = await BuildServer(version);
 
             try
             {
@@ -50,6 +52,14 @@
                 server.Stop();
                 server.Destroy();
             }
+        }
+
+        private Task<IFdbServer> BuildServer(FdbServerVersion version)
+        {
+            var builder = new FdbServerBuilder();
+            builder.WithVersion(version);
+
+            return builder.BuildAsync();
         }
     }
 }
