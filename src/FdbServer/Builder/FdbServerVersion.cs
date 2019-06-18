@@ -1,4 +1,4 @@
-﻿namespace FdbServer
+﻿namespace FdbServer.Builder
 {
     public enum FdbServerVersion
     {

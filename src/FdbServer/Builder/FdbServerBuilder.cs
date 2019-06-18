@@ -1,12 +1,12 @@
-﻿namespace FdbServer
-{
-    using System;
-    using System.IO;
-    using System.Runtime.InteropServices;
-    using System.Threading.Tasks;
-    using Download;
-    using global::FdbServer.Infrastructure;
+﻿using System;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
+using FdbServer.Builder.Download;
+using FdbServer.Infrastructure;
 
+namespace FdbServer.Builder
+{
     public class FdbServerBuilder
     {
         private readonly IFdbServerInstaller _installer = new FdbServerInstaller();
@@ -57,7 +57,7 @@
             Directory.CreateDirectory(_logDirectory);
             Directory.CreateDirectory(_dataDirectory);
 
-            var server = new FdbServer(
+            var server = new FdbServerInstance(
                 _homeDirectory,
                 _dataDirectory,
                 _logDirectory,

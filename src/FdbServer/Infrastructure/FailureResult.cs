@@ -1,7 +1,7 @@
-﻿namespace FdbServer.Infrastructure
-{
-    using System;
+﻿using System;
 
+namespace FdbServer.Infrastructure
+{
     internal class FailureResult : IResult
     {
         public string Message { get; }

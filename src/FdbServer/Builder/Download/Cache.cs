@@ -1,9 +1,9 @@
-﻿namespace FdbServer.Download
-{
-    using System.IO;
-    using System.Threading.Tasks;
-    using global::FdbServer.Infrastructure;
+﻿using System.IO;
+using System.Threading.Tasks;
+using FdbServer.Infrastructure;
 
+namespace FdbServer.Builder.Download
+{
     internal static class Cache
     {
         public static IResult CheckAvailability(FdbServerUrl url)
@@ -18,7 +18,7 @@
             return IntegrityVerifier.Verify(url, fileName);
         }
 
-        public static Task<IResult> Load(FdbServerUrl url) 
+        public static Task<IResult> Load(FdbServerUrl url)
             => FdbServerDownloader.Download(url, GetCacheFileName(url));
 
         internal static IResult Retrieve(FdbServerUrl url, string outputFile)

@@ -1,8 +1,8 @@
-﻿namespace FdbServer.Download
-{
-    using System;
-    using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
+namespace FdbServer.Builder.Download
+{
     internal static class FdbServerUrlRepository
     {
         private static readonly Dictionary<FdbServerVersion, FdbServerUrl> _repository = new Dictionary<FdbServerVersion, FdbServerUrl>
@@ -18,7 +18,7 @@
                     FdbServerVersion.v6_0_15,
                     new Uri(@"https://www.github.com/jvandertil/FdbServer/releases/download/v0.4.0/fdbserver-6.0.15.zip"),
                     "1648E1574D74B781953C44C556CD75DBBA5F41E1812B54758BE808056A1E9A3C31468D5ADCCA2E5729D90A0BC2D461C5113B79C1DAC936AE717C6AA5799D131E")}
-        };                                                                                                               
+        };
 
         public static FdbServerUrl GetUrl(FdbServerVersion version)
         {

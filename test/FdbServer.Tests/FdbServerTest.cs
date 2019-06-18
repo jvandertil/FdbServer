@@ -1,9 +1,10 @@
-﻿namespace FdbServer.Tests
-{
-    using System;
-    using System.Threading.Tasks;
-    using Xunit;
+﻿using System;
+using System.Threading.Tasks;
+using FdbServer.Builder;
+using Xunit;
 
+namespace FdbServer.Tests
+{
     public class FdbServerTest
     {
         public FdbServerTest()
@@ -20,15 +21,15 @@
 
             try
             {
-                server.Start();
-
-                server.Initialize();
-
-                server.Stop();
+                server
+                    .Start()
+                    .Initialize();
             }
             finally
             {
-                server.Destroy();
+                server
+                    .Stop()
+                    .Destroy();
             }
         }
 
@@ -41,16 +42,17 @@
 
             try
             {
-                server.Start();
-
-                server.Initialize();
+                server
+                    .Start()
+                    .Initialize();
 
                 Assert.NotNull(server.ClusterFile);
             }
             finally
             {
-                server.Stop();
-                server.Destroy();
+                server
+                    .Stop()
+                    .Destroy();
             }
         }
 

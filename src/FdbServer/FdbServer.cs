@@ -1,59 +1,28 @@
-﻿namespace FdbServer
-{
-    using System;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Net;
-    using System.Net.Sockets;
-    using System.Threading;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.Net;
+using System.Net.Sockets;
+using System.Threading;
 
-    internal class FdbServer : IFdbServer
+namespace FdbServer
+{
+    internal class FdbServerInstance : FdbServerBase, IFdbServer
     {
-        private readonly string _homeDirectory;
-        private readonly string _dataDirectory;
-        private readonly string _logDirectory;
         private readonly string _fdbserverExe;
-        private readonly string _fdbcliExe;
 
         private int _port;
         private Process _fdbserverProcess;
 
         public bool Started => _fdbserverProcess != null && !_fdbserverProcess.HasExited;
 
-        public string ClusterFile { get;}
-
-        public FdbServer(string homeDirectory, string dataDirectory, string logDirectory, string clusterFile)
+        public FdbServerInstance(string homeDirectory, string dataDirectory, string logDirectory, string clusterFile)
+            : base(homeDirectory, dataDirectory, logDirectory, clusterFile)
         {
-            _homeDirectory = homeDirectory;
-            _dataDirectory = dataDirectory;
-            _logDirectory = logDirectory;
-            ClusterFile = clusterFile;
-
-            _fdbserverExe = Path.Combine(_homeDirectory, "fdbserver.exe");
-            _fdbcliExe = Path.Combine(_homeDirectory, "fdbcli.exe");
+            _fdbserverExe = Path.Combine(HomeDirectory, "fdbserver.exe");
         }
 
-        public void Initialize()
-        {
-            if (!Started)
-            {
-                throw new InvalidOperationException("Start the server before initializing it.");
-            }
-
-            var fdbCliInfo = new ProcessStartInfo(_fdbcliExe, $@"--cluster_file=""{ClusterFile}"" --exec=""configure new single memory""")
-            {
-                UseShellExecute = false,
-            };
-
-            var cliProc = Process.Start(fdbCliInfo);
-
-            while (cliProc != null && !cliProc.HasExited)
-            {
-                Thread.Sleep(50);
-            }
-        }
-
-        public void Start()
+        public IRunningFdbServer Start()
         {
             if (Started)
             {
@@ -64,8 +33,8 @@
 
             var parameters = $"--public_address=\"127.0.0.1:{_port}\"  --listen_address=\"public\""
                 + $" --cluster_file=\"{ClusterFile}\""
-                + $" --datadir=\"{_dataDirectory}\""
-                + $" --logdir=\"{_logDirectory}\"";
+                + $" --datadir=\"{DataDirectory}\""
+                + $" --logdir=\"{LogDirectory}\"";
 
             var info = new ProcessStartInfo(_fdbserverExe, parameters)
             {
@@ -73,9 +42,11 @@
             };
 
             _fdbserverProcess = Process.Start(info);
+
+            return new RunningFdbServer(this);
         }
 
-        public void Stop()
+        public IStoppedFdbServer Stop()
         {
             if (!Started)
             {
@@ -101,16 +72,8 @@
                     Thread.Sleep(100);
                 }
             }
-        }
 
-        public void Destroy()
-        {
-            if (Started)
-            {
-                throw new InvalidOperationException("Destroy can not be run while the server is running.");
-            }
-
-            Directory.Delete(_homeDirectory, true);
+            return new StoppedFdbServer(this);
         }
 
         private void CreateClusterFile()
