@@ -1,58 +1,28 @@
 ﻿namespace FdbServer.Download
 {
     using System.IO;
-    using System.IO.Compression;
     using System.Net.Http;
     using System.Threading.Tasks;
+    using global::FdbServer.Infrastructure;
 
-    internal class FdbServerDownloader : IFdbServerDownloader
+    internal static class FdbServerDownloader
     {
-        public async Task DownloadVersion(FdbServerVersion version, string destinationFile)
-        {
-            var url = FdbServerUrlRepository.GetUrl(version);
-
-            // Download file to temporary file.
-            using (var webclient = new HttpClient())
+        public static Task<IResult> Download(FdbServerUrl url, string destinationFile)
+            => Try.Wrap(async () =>
             {
-                var serverDownloadTask = webclient.GetStreamAsync(url.Uri);
-
-                using (var destination = File.OpenWrite(destinationFile))
+                using (var webclient = new HttpClient())
                 {
-                    var stream = await serverDownloadTask;
+                    var serverDownloadTask = webclient.GetStreamAsync(url.Uri).ConfigureAwait(false);
 
-                    await stream.CopyToAsync(destination);
+                    using (var destination = File.OpenWrite(destinationFile))
+                    {
+                        var stream = await serverDownloadTask;
 
-                    await destination.FlushAsync();
+                        await stream.CopyToAsync(destination).ConfigureAwait(false);
+
+                        await destination.FlushAsync().ConfigureAwait(false);
+                    }
                 }
-            }
-        }
-    }
-
-    internal class FdbServerInstaller : IFdbServerInstaller
-    {
-        private readonly IFdbServerDownloader _downloader;
-
-        public FdbServerInstaller()
-        {
-            _downloader = FdbServerDownloaderFactory.Create();
-        }
-
-        public async Task InstallToDestination(FdbServerVersion version, string destinationFolder)
-        {
-            var zipFileName = Path.GetTempFileName();
-
-            try
-            {
-                await _downloader.DownloadVersion(version, zipFileName);
-
-                // Extract archive to home
-                Directory.CreateDirectory(destinationFolder);
-                ZipFile.ExtractToDirectory(zipFileName, destinationFolder);
-            }
-            finally
-            {
-                File.Delete(zipFileName);
-            }
-        }
+            });
     }
 }

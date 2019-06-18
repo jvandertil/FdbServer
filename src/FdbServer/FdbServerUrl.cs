@@ -4,12 +4,15 @@
 
     internal class FdbServerUrl
     {
+        public FdbServerVersion Version { get; }
+
         public Uri Uri { get; }
 
         public string Sha512Hash { get; }
 
-        public FdbServerUrl(Uri uri, string sha512Hash)
+        public FdbServerUrl(FdbServerVersion version, Uri uri, string sha512Hash)
         {
+            Version = version;
             Uri = uri;
             Sha512Hash = sha512Hash;
         }

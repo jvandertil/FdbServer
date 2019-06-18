@@ -16,7 +16,7 @@
         [InlineData(FdbServerVersion.v6_0_15)]
         public async Task TestFullCycle(FdbServerVersion version)
         {
-            var server = await BuildServer(version);
+            var server = await BuildServer(version).ConfigureAwait(false);
 
             try
             {
@@ -37,7 +37,7 @@
         [InlineData(FdbServerVersion.v6_0_15)]
         public async Task ClusterFile_ReturnsPath(FdbServerVersion version)
         {
-            var server = await BuildServer(version);
+            var server = await BuildServer(version).ConfigureAwait(false);
 
             try
             {
