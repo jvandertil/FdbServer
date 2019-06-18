@@ -1,9 +1,10 @@
 ﻿namespace FdbServer
 {
     using System.Threading.Tasks;
+    using global::FdbServer.Infrastructure;
 
     internal interface IFdbServerInstaller
     {
-        Task InstallToDestination(FdbServerVersion version, string destinationFolder);
+        Task<IResult> InstallToDestination(FdbServerVersion version, string destinationFolder);
     }
 }

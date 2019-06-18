@@ -5,8 +5,7 @@
     using System.Runtime.InteropServices;
     using System.Threading.Tasks;
     using Download;
-    using Download.Caching;
-    using Download.Integrity;
+    using global::FdbServer.Infrastructure;
 
     public class FdbServerBuilder
     {
@@ -50,27 +49,9 @@
 
         public async Task<IFdbServer> BuildAsync()
         {
-            // Download archive to zip
-            try
-            {
-                await _installer.InstallToDestination(_version, _homeDirectory);
-            }
-            catch (FileIntegrityException)
-            {
-                // Maybe corrupt cache?
-                CachingHelper.PurgeCache();
-
-                try
-                {
-                    await _installer.InstallToDestination(_version, _homeDirectory);
-                }
-                catch
-                {
-                    Directory.Delete(_homeDirectory, true);
-
-                    throw;
-                }
-            }
+            (await _installer.InstallToDestination(_version, _homeDirectory).ConfigureAwait(false))
+                .OnFailure(_ => Try.Wrap(() => Directory.Delete(_homeDirectory, true)))
+                .EnsureSuccess();
 
             // Initialize folders, log & data
             Directory.CreateDirectory(_logDirectory);
