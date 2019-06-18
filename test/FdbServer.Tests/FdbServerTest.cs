@@ -17,19 +17,19 @@ namespace FdbServer.Tests
         [InlineData(FdbServerVersion.v6_0_15)]
         public async Task TestFullCycle(FdbServerVersion version)
         {
-            var server = await BuildServer(version).ConfigureAwait(false);
+            var fdbServer = await BuildServer(version).ConfigureAwait(false);
 
             try
             {
-                server
+                fdbServer
                     .Start()
-                    .Initialize();
-            }
-            finally
-            {
-                server
+                    .Initialize()
                     .Stop()
                     .Destroy();
+            }
+            catch
+            {
+                fdbServer.Destruct();
             }
         }
 
@@ -38,21 +38,15 @@ namespace FdbServer.Tests
         [InlineData(FdbServerVersion.v6_0_15)]
         public async Task ClusterFile_ReturnsPath(FdbServerVersion version)
         {
-            var server = await BuildServer(version).ConfigureAwait(false);
+            var fdbServer = await BuildServer(version).ConfigureAwait(false);
 
             try
             {
-                server
-                    .Start()
-                    .Initialize();
-
-                Assert.NotNull(server.ClusterFile);
+                Assert.NotNull(fdbServer.ClusterFile);
             }
             finally
             {
-                server
-                    .Stop()
-                    .Destroy();
+                fdbServer.Destruct();
             }
         }
 

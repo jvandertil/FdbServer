@@ -13,8 +13,10 @@
         IRunningFdbServer Start();
 
         /// <summary>
-        /// Stops the server.
+        /// Kills and destroys this server.
         /// </summary>
-        IStoppedFdbServer Stop();
+        /// <seealso cref="IRunningFdbServer.Stop"/>
+        /// <seealso cref="IStoppedFdbServer.Destroy"/>
+        void Destruct();
     }
 }

@@ -1,10 +1,17 @@
-﻿namespace FdbServer
+﻿using System;
+
+namespace FdbServer
 {
-    public interface IRunningFdbServer
+    public interface IRunningFdbServer : IDisposable
     {
         /// <summary>
         /// Initializes the server, required on newly created servers.
         /// </summary>
-        void Initialize();
+        IRunningFdbServer Initialize();
+
+        /// <summary>
+        /// Stops the server.
+        /// </summary>
+        IStoppedFdbServer Stop();
     }
 }
