@@ -1,7 +1,7 @@
-﻿namespace FdbServer
-{
-    using System;
+﻿using System;
 
+namespace FdbServer.Builder
+{
     internal class FdbServerUrl
     {
         public FdbServerVersion Version { get; }

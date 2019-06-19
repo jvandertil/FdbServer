@@ -1,8 +1,8 @@
-﻿namespace FdbServer.Infrastructure
-{
-    using System;
-    using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
+namespace FdbServer.Infrastructure
+{
     internal static class ResultExtensions
     {
         public static IResult OnFailure(this IResult result, Func<IResult, IResult> onFail)

@@ -1,10 +1,10 @@
-﻿namespace FdbServer.Download
-{
-    using System.IO;
-    using System.IO.Compression;
-    using System.Threading.Tasks;
-    using global::FdbServer.Infrastructure;
+﻿using System.IO;
+using System.IO.Compression;
+using System.Threading.Tasks;
+using FdbServer.Infrastructure;
 
+namespace FdbServer.Builder.Download
+{
     internal class FdbServerInstaller : IFdbServerInstaller
     {
         public async Task<IResult> InstallToDestination(FdbServerVersion version, string destinationFolder)

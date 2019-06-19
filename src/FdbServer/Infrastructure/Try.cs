@@ -1,8 +1,8 @@
-﻿namespace FdbServer.Infrastructure
-{
-    using System;
-    using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
+namespace FdbServer.Infrastructure
+{
     internal static class Try
     {
         public static IResult Wrap(Action action)

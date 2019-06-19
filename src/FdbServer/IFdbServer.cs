@@ -8,23 +8,10 @@
         string ClusterFile { get; }
 
         /// <summary>
-        /// Initializes the server, required on newly created servers.
+        /// Kills and destroys this server.
         /// </summary>
-        void Initialize();
-
-        /// <summary>
-        /// Starts the server.
-        /// </summary>
-        void Start();
-
-        /// <summary>
-        /// Stops the server.
-        /// </summary>
-        void Stop();
-
-        /// <summary>
-        /// Destroys the server, deleting all files created.
-        /// </summary>
-        void Destroy();
+        /// <seealso cref="IRunningFdbServer.Stop"/>
+        /// <seealso cref="IStoppedFdbServer.Destroy"/>
+        void Destruct();
     }
 }

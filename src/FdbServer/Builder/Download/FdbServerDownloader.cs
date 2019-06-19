@@ -1,10 +1,10 @@
-﻿namespace FdbServer.Download
-{
-    using System.IO;
-    using System.Net.Http;
-    using System.Threading.Tasks;
-    using global::FdbServer.Infrastructure;
+﻿using System.IO;
+using System.Net.Http;
+using System.Threading.Tasks;
+using FdbServer.Infrastructure;
 
+namespace FdbServer.Builder.Download
+{
     internal static class FdbServerDownloader
     {
         public static Task<IResult> Download(FdbServerUrl url, string destinationFile)

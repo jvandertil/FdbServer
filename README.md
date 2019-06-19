@@ -1,3 +1,5 @@
+![Nuget](https://img.shields.io/nuget/v/FdbServer.svg?style=flat-square)
+
 # FdbServer
 Library that provides a FoundationDB server for integration testing.
 
@@ -5,27 +7,25 @@ Library that provides a FoundationDB server for integration testing.
 Once installed (package is available through [NuGet](https://www.nuget.org/packages/FdbServer)) create a server with all defaults.
 
 ```cs
-var builder = new FdbServerBuilder();
-var server = await builder.BuildAsync();
+var server = await new FdbServerBuilder()
+                            .BuildAsync()
+                            .ConfigureAwait(false);
 
 try
 {
-    // Start the server
-    server.Start();
-
-    // Initialize the database as empty.
-    server.Initialize();
+    server
+        // Start the server
+        .Start()
+        // Initialize the database as empty.
+        .Initialize();
 
     // The server is now running and available.
-    // The ClusterFile property on the server can be used to connect.
+    // Use server.ClusterFile to connect to the server.
 }
 finally
 {
-    // Stop the server
-    server.Stop();
-
-    // Destroy all data stored by the server.
-    server.Destroy();
+    // Stop the server and delete it entirely
+    server.Destruct();
 }
 ```
 
@@ -43,19 +43,19 @@ public sealed class FdbFixture : IAsyncLifetime
 
     public async Task InitializeAsync()
     {
-        var builder = new FdbServerBuilder()
-            .WithVersion(FdbServerVersion.v5_2_5);
+        var server = await new FdbServerBuilder()
+            .WithVersion(FdbServerVersion.v5_2_5)
+            .BuildAsync()
+            .ConfigureAwait(false);
 
-        _server = await builder.BuildAsync();
-
-        _server.Start();
-        _server.Initialize();
+        _server = server
+            .Start()
+            .Initialize();
     }
 
     public Task DisposeAsync()
     {
-        _server.Stop();
-        _server.Destroy();
+        _server.Destruct();
 
         return Task.CompletedTask;
     }

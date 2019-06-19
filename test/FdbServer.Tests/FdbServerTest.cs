@@ -1,9 +1,10 @@
-﻿namespace FdbServer.Tests
-{
-    using System;
-    using System.Threading.Tasks;
-    using Xunit;
+﻿using System;
+using System.Threading.Tasks;
+using FdbServer.Builder;
+using Xunit;
 
+namespace FdbServer.Tests
+{
     public class FdbServerTest
     {
         public FdbServerTest()
@@ -16,19 +17,19 @@
         [InlineData(FdbServerVersion.v6_0_15)]
         public async Task TestFullCycle(FdbServerVersion version)
         {
-            var server = await BuildServer(version).ConfigureAwait(false);
+            var fdbServer = await BuildServer(version).ConfigureAwait(false);
 
             try
             {
-                server.Start();
-
-                server.Initialize();
-
-                server.Stop();
+                fdbServer
+                    .Start()
+                    .Initialize()
+                    .Stop()
+                    .Destroy();
             }
-            finally
+            catch
             {
-                server.Destroy();
+                fdbServer.Destruct();
             }
         }
 
@@ -37,24 +38,19 @@
         [InlineData(FdbServerVersion.v6_0_15)]
         public async Task ClusterFile_ReturnsPath(FdbServerVersion version)
         {
-            var server = await BuildServer(version).ConfigureAwait(false);
+            var fdbServer = await BuildServer(version).ConfigureAwait(false);
 
             try
             {
-                server.Start();
-
-                server.Initialize();
-
-                Assert.NotNull(server.ClusterFile);
+                Assert.NotNull(fdbServer.ClusterFile);
             }
             finally
             {
-                server.Stop();
-                server.Destroy();
+                fdbServer.Destruct();
             }
         }
 
-        private Task<IFdbServer> BuildServer(FdbServerVersion version)
+        private Task<IStoppedFdbServer> BuildServer(FdbServerVersion version)
         {
             var builder = new FdbServerBuilder();
             builder.WithVersion(version);
