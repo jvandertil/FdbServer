@@ -1,3 +1,5 @@
+![Nuget](https://img.shields.io/nuget/v/FdbServer.svg?style=flat-square)
+
 # FdbServer
 Library that provides a FoundationDB server for integration testing.
 
