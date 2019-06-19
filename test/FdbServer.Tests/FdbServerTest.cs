@@ -50,7 +50,7 @@ namespace FdbServer.Tests
             }
         }
 
-        private Task<IFdbServer> BuildServer(FdbServerVersion version)
+        private Task<IStoppedFdbServer> BuildServer(FdbServerVersion version)
         {
             var builder = new FdbServerBuilder();
             builder.WithVersion(version);

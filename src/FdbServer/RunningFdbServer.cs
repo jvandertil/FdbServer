@@ -79,5 +79,10 @@ namespace FdbServer
                 _serverProcess.Dispose();
             }
         }
+
+        public override void Destruct()
+        {
+            Stop().Destroy();
+        }
     }
 }

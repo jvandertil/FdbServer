@@ -2,7 +2,7 @@
 
 namespace FdbServer
 {
-    internal abstract class FdbServerBase
+    internal abstract class FdbServerBase : IFdbServer
     {
         protected readonly string HomeDirectory;
         protected readonly string DataDirectory;
@@ -28,5 +28,7 @@ namespace FdbServer
             LogDirectory = server.LogDirectory;
             ClusterFile = server.ClusterFile;
         }
+
+        public abstract void Destruct();
     }
 }

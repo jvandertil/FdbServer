@@ -47,7 +47,7 @@ namespace FdbServer.Builder
             return this;
         }
 
-        public async Task<IFdbServer> BuildAsync()
+        public async Task<IStoppedFdbServer> BuildAsync()
         {
             (await _installer.InstallToDestination(_version, _homeDirectory).ConfigureAwait(false))
                 .OnFailure(_ => Try.Wrap(() => Directory.Delete(_homeDirectory, true)))
@@ -57,7 +57,7 @@ namespace FdbServer.Builder
             Directory.CreateDirectory(_logDirectory);
             Directory.CreateDirectory(_dataDirectory);
 
-            var server = new FdbServerInstance(
+            var server = new StoppedFdbServer(
                 _homeDirectory,
                 _dataDirectory,
                 _logDirectory,

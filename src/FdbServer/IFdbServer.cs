@@ -8,11 +8,6 @@
         string ClusterFile { get; }
 
         /// <summary>
-        /// Starts the server.
-        /// </summary>
-        IRunningFdbServer Start();
-
-        /// <summary>
         /// Kills and destroys this server.
         /// </summary>
         /// <seealso cref="IRunningFdbServer.Stop"/>
