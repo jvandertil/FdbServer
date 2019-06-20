@@ -82,3 +82,7 @@ Known limitations:
   * Every server gets a new directory, you can't specify a location currently.
 * Only supports FoundationDB 5.2.5
   * I'll add newer versions as they appear.
+
+## Disclaimer
+This library 'bundles' certain FoundationDB components, the license for FoundationDB can be found [here](https://github.com/apple/foundationdb/blob/master/LICENSE).
+  
