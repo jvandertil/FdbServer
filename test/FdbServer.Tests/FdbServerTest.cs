@@ -15,6 +15,7 @@ namespace FdbServer.Tests
         [Theory]
         [InlineData(FdbServerVersion.v5_2_5)]
         [InlineData(FdbServerVersion.v6_0_15)]
+        [InlineData(FdbServerVersion.v6_1_8)]
         public async Task TestFullCycle(FdbServerVersion version)
         {
             var fdbServer = await BuildServer(version).ConfigureAwait(false);
@@ -30,12 +31,15 @@ namespace FdbServer.Tests
             catch
             {
                 fdbServer.Destruct();
+
+                throw;
             }
         }
 
         [Theory]
         [InlineData(FdbServerVersion.v5_2_5)]
         [InlineData(FdbServerVersion.v6_0_15)]
+        [InlineData(FdbServerVersion.v6_1_8)]
         public async Task ClusterFile_ReturnsPath(FdbServerVersion version)
         {
             var fdbServer = await BuildServer(version).ConfigureAwait(false);
