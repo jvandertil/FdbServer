@@ -12,11 +12,11 @@ namespace FdbServer.Builder.Download
             {
                 using (var webclient = new HttpClient())
                 {
-                    var serverDownloadTask = webclient.GetStreamAsync(url.Uri).ConfigureAwait(false);
+                    var serverDownloadTask = webclient.GetStreamAsync(url.Uri);
 
                     using (var destination = File.OpenWrite(destinationFile))
                     {
-                        var stream = await serverDownloadTask;
+                        var stream = await serverDownloadTask.ConfigureAwait(false);
 
                         await stream.CopyToAsync(destination).ConfigureAwait(false);
 
